@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.MiInfoTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.server.entity.MiInfoTable">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="dtuId" column="dtu_id" jdbcType="OTHER"/>
+            <result property="capacity" column="capacity" jdbcType="FLOAT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,dtu_id,capacity
+    </sql>
+
+    <select id="listMiByPlantId" resultType="com.example.server.vo.MiList">
+        SELECT mi_info_table.id, mi_power_table.state, dtu_table.id as dtuId, mi_power_table.power, mi_info_table.capacity, mi_power_table.update_time
+        FROM mi_info_table
+                 JOIN mi_power_table ON mi_info_table.id = mi_power_table.id
+                 JOIN dtu_table ON mi_info_table.dtu_id = dtu_table.id
+        WHERE dtu_table.plant_id = #{plantId}
+    </select>
+
+
+</mapper>

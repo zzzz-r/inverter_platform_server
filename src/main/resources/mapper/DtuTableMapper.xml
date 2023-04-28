@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.DtuTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.server.entity.DtuTable">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="plantId" column="plant_id" jdbcType="OTHER"/>
+            <result property="connectNum" column="connect_num" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,state,update_time,
+        plant_id,connect_num
+    </sql>
+</mapper>

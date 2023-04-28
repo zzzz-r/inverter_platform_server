@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.MiDayPowerMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.server.entity.MiDayPower">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <id property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="power" column="power" jdbcType="FLOAT"/>
+            <result property="temperature" column="temperature" jdbcType="FLOAT"/>
+            <result property="gridVoltage" column="grid_voltage" jdbcType="FLOAT"/>
+            <result property="freq" column="freq" jdbcType="FLOAT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,update_time,power,
+        temperature,grid_voltage,freq
+    </sql>
+</mapper>

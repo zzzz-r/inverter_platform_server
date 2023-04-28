@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.MiPowerTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.server.entity.MiPowerTable">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="power" column="power" jdbcType="FLOAT"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="state" column="state" jdbcType="SMALLINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,power,update_time,
+        state
+    </sql>
+</mapper>
