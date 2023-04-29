@@ -18,13 +18,11 @@ public class MiDayPower implements Serializable {
     /**
      * 
      */
-    @TableId
     private Object id;
 
     /**
      * 
      */
-    @TableId
     private Date updateTime;
 
     /**

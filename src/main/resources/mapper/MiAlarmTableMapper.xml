@@ -14,11 +14,13 @@
             <result property="acCurrent" column="ac_current" jdbcType="TINYINT"/>
             <result property="acVoltage" column="ac_voltage" jdbcType="TINYINT"/>
             <result property="gridVoltage" column="grid_voltage" jdbcType="TINYINT"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,if_alarm,temperature,
         freq,dc_current,dc_voltage,
-        ac_current,ac_voltage,grid_voltage
+        ac_current,ac_voltage,grid_voltage,
+        update_time
     </sql>
 </mapper>

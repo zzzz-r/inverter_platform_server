@@ -1,6 +1,9 @@
 package com.example.server.controllers;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+import com.example.server.entity.Files;
 import com.example.server.service.IStorageService;
 import com.example.server.vo.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -12,14 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @Slf4j
 @RequestMapping("/")
-public class CommonController {
-    @Autowired
+public class FileController {
+    @Resource
     private IStorageService storageService;
     @Value("${upload.accessPath}") // Value注解获得application.yml中的值
     private String accessPath;
@@ -29,9 +33,13 @@ public class CommonController {
     public Result upload(HttpServletRequest request, HttpServletResponse response) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request; //转换request请求
         MultipartFile file = multipartRequest.getFile("file"); //获取文件
-        String filename = file.getOriginalFilename();
-        String type = FileUtil.
-        storageService.save(file, filename, localPath);
-        return Result.success(accessPath+filename);
+        String originalFilename = file.getOriginalFilename();
+        String type = FileUtil.extName(originalFilename);
+
+        // 定义一个文件唯一的标识码
+        String fileUUID = IdUtil.fastSimpleUUID() + StrUtil.DOT + type;
+        // 保存文件
+        Files saveFile = storageService.saveFile(file, fileUUID, localPath);
+        return Result.success(accessPath+saveFile.getName());
     }
 }

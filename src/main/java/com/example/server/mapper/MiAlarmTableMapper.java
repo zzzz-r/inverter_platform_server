@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
 * @author 86130
 * @description 针对表【mi_alarm_table】的数据库操作Mapper
-* @createDate 2023-04-28 11:32:00
+* @createDate 2023-04-28 14:05:54
 * @Entity com.example.server.entity.MiAlarmTable
 */
 public interface MiAlarmTableMapper extends BaseMapper<MiAlarmTable> {

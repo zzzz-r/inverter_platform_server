@@ -1,7 +1,6 @@
 package com.example.server.exception;
 
 import com.example.server.enums.ResultEnum;
-import com.example.server.mapper.PoiMapper;
 
 public class PoiException extends RuntimeException{
     private PoiException(String msg){
@@ -14,7 +13,17 @@ public class PoiException extends RuntimeException{
     public static PoiException OperateFail(){
         return new PoiException(ResultEnum.ERROR_OPERATION.getMsg());
     }
+    public static PoiException ErrorLogin(){
+        return new PoiException(ResultEnum.ERROR_LOGIN.getMsg());
+    }
+    public static PoiException ErrorRegister(){
+        return new PoiException(ResultEnum.ERROR_REGISTER.getMsg());
+    }
+    public static PoiException ErrorToken(){
+        return new PoiException(ResultEnum.ERROR_TOKEN.getMsg());
+    }
     public static PoiException Unknown(){
         return new PoiException(ResultEnum.ERROR_UNKNOWN.getMsg());
     }
+
 }

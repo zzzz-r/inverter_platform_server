@@ -5,8 +5,8 @@
 <mapper namespace="com.example.server.mapper.MiDayPowerMapper">
 
     <resultMap id="BaseResultMap" type="com.example.server.entity.MiDayPower">
-            <id property="id" column="id" jdbcType="OTHER"/>
-            <id property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="id" column="id" jdbcType="OTHER"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="power" column="power" jdbcType="FLOAT"/>
             <result property="temperature" column="temperature" jdbcType="FLOAT"/>
             <result property="gridVoltage" column="grid_voltage" jdbcType="FLOAT"/>

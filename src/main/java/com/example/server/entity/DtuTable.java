@@ -36,11 +36,6 @@ public class DtuTable implements Serializable {
      */
     private Object plantId;
 
-    /**
-     * 
-     */
-    private Integer connectNum;
-
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

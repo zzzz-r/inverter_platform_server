@@ -24,7 +24,7 @@ public class Result<T> {
         Result t = new Result(rEnum.getMsg(), rEnum.getCode(), null);
         return t;
     }
-    public Result(String msg,int code,T data){
+    public Result(String msg, int code, T data){
         this.msg=msg;
         this.code=code;
         this.data=data;

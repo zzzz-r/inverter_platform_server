@@ -9,11 +9,17 @@
             <result property="state" column="state" jdbcType="TINYINT"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="plantId" column="plant_id" jdbcType="OTHER"/>
-            <result property="connectNum" column="connect_num" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,state,update_time,
         plant_id,connect_num
     </sql>
+    <select id="listDtuByPlantId" resultType="com.example.server.vo.DtuList">
+        SELECT dtu_table.id, dtu_table.state, dtu_table.update_time, count(*) as connectNum
+        FROM dtu_table
+            JOIN mi_info_table ON mi_info_table.dtu_id = dtu_table.id
+        WHERE dtu_table.plant_id = #{plantId}
+        GROUP BY dtu_table.id
+    </select>
 </mapper>

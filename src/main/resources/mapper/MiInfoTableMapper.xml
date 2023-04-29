@@ -21,6 +21,11 @@
                  JOIN dtu_table ON mi_info_table.dtu_id = dtu_table.id
         WHERE dtu_table.plant_id = #{plantId}
     </select>
+    <select id="getPlantId" resultType="java.lang.Integer">
+        SELECT dtu_table.plant_id FROM mi_info_table
+            JOIN dtu_table ON mi_info_table.dtu_id = dtu_table.id
+        WHERE mi_info_table.id = #{miId}
+    </select>
 
 
 </mapper>

@@ -1,7 +1,11 @@
 package com.example.server.mapper;
 
-import com.example.server.entity.DtuTable;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.server.entity.DtuTable;
+import com.example.server.vo.DtuList;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 86130
@@ -10,7 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.example.server.entity.DtuTable
 */
 public interface DtuTableMapper extends BaseMapper<DtuTable> {
-
+    List<DtuList> listDtuByPlantId(@Param("plantId") int plantId);
 }
 
 

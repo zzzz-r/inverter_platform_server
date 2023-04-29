@@ -2,6 +2,7 @@ package com.example.server.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.server.entity.MiInfoTable;
+import com.example.server.exception.PoiException;
 import com.example.server.service.MiInfoTableService;
 import com.example.server.mapper.MiInfoTableMapper;
 import com.example.server.vo.MiList;
@@ -22,7 +23,21 @@ public class MiInfoTableServiceImpl extends ServiceImpl<MiInfoTableMapper, MiInf
     private MiInfoTableMapper miInfoTableMapper;
     @Override
     public List<MiList> listMiByPlantId(int plantId){
-        return miInfoTableMapper.listMiByPlantId(plantId);
+        try{
+            return miInfoTableMapper.listMiByPlantId(plantId);
+        }catch (Exception e){
+            throw PoiException.OperateFail();
+        }
+    }
+
+    @Override
+    public int getPlantId(Object miId){
+        try{
+            return miInfoTableMapper.getPlantId(miId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw PoiException.OperateFail();
+        }
     }
 }
 

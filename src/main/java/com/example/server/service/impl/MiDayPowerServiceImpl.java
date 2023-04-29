@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author 86130
 * @description 针对表【mi_day_power】的数据库操作Service实现
-* @createDate 2023-04-28 11:34:17
+* @createDate 2023-04-28 13:48:47
 */
 @Service
 public class MiDayPowerServiceImpl extends ServiceImpl<MiDayPowerMapper, MiDayPower>

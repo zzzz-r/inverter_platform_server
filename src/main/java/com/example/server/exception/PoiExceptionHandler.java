@@ -13,8 +13,13 @@ public class PoiExceptionHandler {
             return Result.fail(ResultEnum.ERROR_NOT_FOUND);
         }else if (e.getMessage().endsWith(ResultEnum.ERROR_OPERATION.getMsg())){
             return Result.fail(ResultEnum.ERROR_OPERATION);
+        }else if (e.getMessage().endsWith(ResultEnum.ERROR_LOGIN.getMsg())){
+            return Result.fail(ResultEnum.ERROR_LOGIN);
+        }else if (e.getMessage().endsWith(ResultEnum.ERROR_REGISTER.getMsg())) {
+            return Result.fail(ResultEnum.ERROR_REGISTER);
+        }else if (e.getMessage().endsWith(ResultEnum.ERROR_TOKEN.getMsg())) {
+            return Result.fail(ResultEnum.ERROR_TOKEN);
         }
-
         return Result.fail();
     }
     @ExceptionHandler(Exception.class) //全局异常捕获

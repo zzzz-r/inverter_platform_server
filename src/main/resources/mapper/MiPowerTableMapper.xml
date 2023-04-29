@@ -8,11 +8,21 @@
             <id property="id" column="id" jdbcType="OTHER"/>
             <result property="power" column="power" jdbcType="FLOAT"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="state" column="state" jdbcType="SMALLINT"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="dayGen" column="day_gen" jdbcType="FLOAT"/>
+            <result property="dcCurrent" column="dc_current" jdbcType="FLOAT"/>
+            <result property="dcVoltage" column="dc_voltage" jdbcType="FLOAT"/>
+            <result property="acCurrent" column="ac_current" jdbcType="FLOAT"/>
+            <result property="acVoltage" column="ac_voltage" jdbcType="FLOAT"/>
+            <result property="freq" column="freq" jdbcType="FLOAT"/>
+            <result property="temperature" column="temperature" jdbcType="FLOAT"/>
+            <result property="gridVoltage" column="grid_voltage" jdbcType="FLOAT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,power,update_time,
-        state
+        state,day_gen,dc_current,
+        dc_voltage,ac_current,ac_voltage,
+        freq,temperature,grid_voltage
     </sql>
 </mapper>

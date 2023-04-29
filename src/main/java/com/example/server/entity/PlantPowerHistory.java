@@ -5,30 +5,35 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
 
 /**
  * 
- * @TableName mi_info_table
+ * @TableName plant_power_history
  */
-@TableName(value ="mi_info_table")
+@TableName(value ="plant_power_history")
 @Data
-public class MiInfoTable implements Serializable {
+public class PlantPowerHistory implements Serializable {
     /**
      * 
      */
-    @TableId(type = IdType.AUTO)
     private Object id;
 
     /**
-     * 
+     * 当日发电量
      */
-    private Object dtuId;
+    private Double dayGen;
 
     /**
-     * 容量 kWp
+     * 容量
      */
     private Double capacity;
+
+    /**
+     * 日期
+     */
+    private Date dayTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
