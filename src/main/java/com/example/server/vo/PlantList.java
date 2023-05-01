@@ -8,7 +8,8 @@ public class PlantList {
     private String name;
     private Integer state;
     private Boolean alarm;
-    private Float capacity;
+    private String Institute;
+    private String Owner;
     private Float power;
     private Float dayGen;
     private String buildDate;

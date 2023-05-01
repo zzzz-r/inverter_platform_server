@@ -89,8 +89,8 @@ public class MiController {
             List miAlarmVoList = miAlarmTableList.stream().map( item->{
                 MiAlarmVo miAlarmVo = new MiAlarmVo();
                 BeanUtils.copyProperties(item,miAlarmVo);
-                int plantId = miInfoTableService.getPlantId(item.getId());
-                miAlarmVo.setPlantId(plantId);
+                String plantName = miInfoTableService.getPlantName(item.getId());
+                miAlarmVo.setPlantName(plantName);
                 int state = miPowerTableService.getById((Serializable) item.getId()).getState();
                 miAlarmVo.setState(state);
                 return miAlarmVo;

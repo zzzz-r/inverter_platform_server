@@ -13,6 +13,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.example.server.enums.ResultEnum.ERROR_PARAM;
 
 @RestController
@@ -68,5 +70,51 @@ public class UserController {
         String token = TokenUtils.genToken(user.getId().toString(),user.getPassword()); // 设置token
         userDTO.setToken(token);
         return Result.success(userDTO);
+    }
+
+    @PutMapping("/resetPwd/{id}")
+    public Result resetPwd(@PathVariable Integer id) {
+        User user = userService.getById(id);
+        if(user == null){
+            Result.fail();
+        }
+        user.setPassword("123456");
+        userService.updateById(user);
+        return Result.success();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result deleteUser(@PathVariable Integer id) {
+        userService.removeById(id);
+        return Result.success();
+    }
+
+    @PutMapping("/admin/edit")
+    public Result adminEdit(@RequestBody User user) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_name", user.getUserName());
+        List<User> userList = userService.list(queryWrapper);
+        if(userList.size() >=1 && userList.get(0).getId() != user.getId()){ //用户已存在
+            throw PoiException.ErrorRegister();
+        }
+        userService.updateById(user);
+        return Result.success();
+    }
+
+    @PostMapping("/admin/register")
+    public Result adminRegister(@RequestBody User user) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_name", user.getUserName());
+        User one = userService.getOne(queryWrapper);
+        if(one != null){ //用户已存在
+            throw PoiException.ErrorRegister();
+        }
+        boolean flag = userService.save(user);
+        log.info("{}",user);
+        if (flag){
+            return Result.success();
+        }else{
+            return Result.fail();
+        }
     }
 }

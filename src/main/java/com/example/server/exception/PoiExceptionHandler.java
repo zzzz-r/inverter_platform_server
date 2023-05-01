@@ -19,6 +19,8 @@ public class PoiExceptionHandler {
             return Result.fail(ResultEnum.ERROR_REGISTER);
         }else if (e.getMessage().endsWith(ResultEnum.ERROR_TOKEN.getMsg())) {
             return Result.fail(ResultEnum.ERROR_TOKEN);
+        }else if (e.getMessage().endsWith(ResultEnum.ERROR_ROOT.getMsg())) {
+            return Result.fail(ResultEnum.ERROR_ROOT);
         }
         return Result.fail();
     }

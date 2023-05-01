@@ -8,7 +8,7 @@ import java.util.Date;
 public class MiAlarmVo {
     private Object id;
     private Integer state;
-    private Object plantId;
+    private String plantName;
     private Integer ifAlarm;
     private Integer temperature;
     private Integer freq;

@@ -22,6 +22,9 @@ public class PoiException extends RuntimeException{
     public static PoiException ErrorToken(){
         return new PoiException(ResultEnum.ERROR_TOKEN.getMsg());
     }
+    public static PoiException NoRoot(){
+        return new PoiException(ResultEnum.ERROR_ROOT.getMsg());
+    }
     public static PoiException Unknown(){
         return new PoiException(ResultEnum.ERROR_UNKNOWN.getMsg());
     }

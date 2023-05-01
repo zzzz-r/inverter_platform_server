@@ -10,6 +10,7 @@ public enum ResultEnum {
     ERROR_LOGIN(4,"用户名或密码错误"),
     ERROR_REGISTER(5,"用户名已存在"),
     ERROR_TOKEN(6,"token验证失败，请重新登录"),
+    ERROR_ROOT(7,"无权限"),
     ;
 
     public Integer getCode() {

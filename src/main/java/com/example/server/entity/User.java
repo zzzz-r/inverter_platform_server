@@ -17,7 +17,7 @@ public class User {
     private String email;
     private String phone;
     private Integer type;
-    private String institute;
+    private Integer instituteId;
     private Date createTime;
     private String avatar;
 

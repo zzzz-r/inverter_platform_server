@@ -31,9 +31,9 @@ public class MiInfoTableServiceImpl extends ServiceImpl<MiInfoTableMapper, MiInf
     }
 
     @Override
-    public int getPlantId(Object miId){
+    public String getPlantName(Object miId){
         try{
-            return miInfoTableMapper.getPlantId(miId);
+            return miInfoTableMapper.getPlantName(miId);
         }catch (Exception e){
             e.printStackTrace();
             throw PoiException.OperateFail();

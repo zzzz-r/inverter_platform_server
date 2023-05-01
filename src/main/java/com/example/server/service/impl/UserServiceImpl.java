@@ -53,4 +53,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw PoiException.ErrorRegister();
         }
     }
+
+    public String getNameById(int id){
+        return userMapper.getNameById(id);
+    }
 }

@@ -5,14 +5,10 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.server.entity.MiDayPower;
-import com.example.server.entity.PlantBasicInfo;
-import com.example.server.entity.PlantPower;
-import com.example.server.entity.PlantPowerHistory;
+import com.example.server.entity.*;
 import com.example.server.exception.PoiException;
-import com.example.server.service.IPlantBasicInfoService;
-import com.example.server.service.IPlantPowerService;
-import com.example.server.service.PlantPowerHistoryService;
+import com.example.server.service.*;
+import com.example.server.service.impl.UserServiceImpl;
 import com.example.server.vo.PlantList;
 import com.example.server.vo.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,24 +34,41 @@ public class PlantController {
     private IPlantBasicInfoService plantBasicInfoService;
     @Resource
     private PlantPowerHistoryService plantPowerHistoryService;
+    @Resource
+    private PlantOwnerTableService plantOwnerTableService;
+    @Resource
+    private InstituteTableService instituteTableService;
+    @Resource
+    private UserServiceImpl userService;
     @GetMapping("/list") //分页待修改
-    public Result list(@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "1000")int pageSize){
-        Page<PlantPower> page = new Page<>(pageNum, pageSize);
-        IPage<PlantPower> pageResult = plantPowerService.page(page);
-
-        List voList = pageResult.getRecords().stream().map( poi->{
-            PlantList poiVo = new PlantList();
-            PlantBasicInfo plantBasicInfo = plantBasicInfoService.getById(poi.getId());
-
-            BeanUtils.copyProperties(poi,poiVo); //将poi中的数据复制给poiVo(名称相同的数据)，前提是必须要有getter和setter
-            poiVo.setName(plantBasicInfo.getName());
-            poiVo.setCapacity(plantBasicInfo.getCapacity());
-            poiVo.setBuildDate(plantBasicInfo.getBuildDate());
-            return poiVo;
+    public Result list(){
+        // 列出当前用户下所有机构
+        List<InstituteTable> institutesVo = instituteTableService.listInstitute();
+        log.info("{}",institutesVo);
+        List<PlantList> plantLists = institutesVo.stream().map( institute ->{
+            PlantList plantVo = new PlantList();
+            // 查找机构下对应的用户和电站
+            try{
+                QueryWrapper<PlantOwnerTable> queryOwner = new QueryWrapper<>();
+                queryOwner.eq("institute_id", institute.getId());
+                PlantOwnerTable ownerInfo = plantOwnerTableService.getOne(queryOwner);
+                log.info("{}",ownerInfo);
+                if(ownerInfo != null) {
+                    // 给返回数据赋值
+                    plantVo.setInstitute(instituteTableService.getNameById(ownerInfo.getInstituteId()));
+                    plantVo.setOwner(userService.getNameById((Integer) ownerInfo.getUserId()));
+                    PlantPower plantPower = plantPowerService.getById((Serializable) ownerInfo.getPlantId());
+                    PlantBasicInfo plantBasicInfo = plantBasicInfoService.getById((Serializable) ownerInfo.getPlantId());
+                    BeanUtils.copyProperties(plantPower,plantVo);
+                    BeanUtils.copyProperties(plantBasicInfo,plantVo);
+                }
+                log.info("{}",plantVo);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return plantVo;
         }).collect(Collectors.toList());
-
-        pageResult.setRecords(voList);
-        return Result.success(pageResult);
+        return Result.success(plantLists);
     }
 
     @GetMapping("/detail/info/{id}") // 获得电站基本信息
