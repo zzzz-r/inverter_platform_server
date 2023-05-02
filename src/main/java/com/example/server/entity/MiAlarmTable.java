@@ -19,7 +19,7 @@ public class MiAlarmTable implements Serializable {
      * 
      */
     @TableId
-    private Object id;
+    private Integer id;
 
     /**
      * 

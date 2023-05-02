@@ -10,6 +10,7 @@ public class UserDTO {
     private String email;
     private String phone;
     private Integer type;
+    private Integer instituteId;
     private String institute;
     private String avatar;
     private String token;

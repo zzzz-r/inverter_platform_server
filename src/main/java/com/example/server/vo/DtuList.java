@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class DtuList {
-    private Object id;
+    private Integer id;
     private Integer state;
     private String updateTime;
     private Integer connectNum;

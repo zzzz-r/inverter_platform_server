@@ -1,15 +1,9 @@
 package com.example.server.controllers;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.server.entity.MiAlarmTable;
-import com.example.server.entity.MiDayPower;
-import com.example.server.entity.MiInfoTable;
-import com.example.server.entity.MiPowerTable;
+import com.example.server.entity.*;
 import com.example.server.exception.PoiException;
-import com.example.server.service.MiAlarmTableService;
-import com.example.server.service.MiDayPowerService;
-import com.example.server.service.MiInfoTableService;
-import com.example.server.service.MiPowerTableService;
+import com.example.server.service.*;
 import com.example.server.vo.MiAlarmVo;
 import com.example.server.vo.MiList;
 import com.example.server.vo.Result;
@@ -24,6 +18,7 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +34,8 @@ public class MiController {
     private MiDayPowerService miDayPowerService;
     @Resource
     private MiAlarmTableService miAlarmTableService;
+    @Resource
+    private InstituteTableService instituteTableService;
 
     @GetMapping("/list/{plantId}")
     public Result list(@PathVariable int plantId){
@@ -83,18 +80,18 @@ public class MiController {
     @GetMapping("/alarm")
     public Result listAlarmMi(){
         try{
-            QueryWrapper<MiAlarmTable> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("if_alarm", 1);
-            List<MiAlarmTable> miAlarmTableList = miAlarmTableService.list(queryWrapper);
-            List miAlarmVoList = miAlarmTableList.stream().map( item->{
-                MiAlarmVo miAlarmVo = new MiAlarmVo();
-                BeanUtils.copyProperties(item,miAlarmVo);
-                String plantName = miInfoTableService.getPlantName(item.getId());
-                miAlarmVo.setPlantName(plantName);
-                int state = miPowerTableService.getById((Serializable) item.getId()).getState();
-                miAlarmVo.setState(state);
-                return miAlarmVo;
-            }).collect(Collectors.toList());
+            List<MiAlarmVo> miAlarmVoList = instituteTableService.listInstitute().stream()
+                    .flatMap(institute -> miAlarmTableService.listAlarmByInstitute(institute.getId()).stream()
+                            .map(item -> {
+                                MiAlarmVo miAlarmVo = new MiAlarmVo();
+                                BeanUtils.copyProperties(item, miAlarmVo);
+                                String plantName = miInfoTableService.getPlantNameByMiId(item.getId());
+                                miAlarmVo.setPlantName(plantName);
+                                int state = miPowerTableService.getById(item.getId()).getState();
+                                miAlarmVo.setState(state);
+                                return miAlarmVo;
+                            }))
+                    .collect(Collectors.toList());
             return Result.success(miAlarmVoList);
         }catch (Exception e){
             e.printStackTrace();

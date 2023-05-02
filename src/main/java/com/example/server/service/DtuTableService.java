@@ -13,4 +13,6 @@ import java.util.List;
 */
 public interface DtuTableService extends IService<DtuTable> {
     List<DtuList> listDtuByPlantId(int plantId);
+
+    List<DtuTable> listAlarmByInstitute(Integer id);
 }

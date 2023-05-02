@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.server.entity.InstituteTable;
 import com.example.server.entity.User;
 import com.example.server.enums.ResultEnum;
+import com.example.server.exception.PoiException;
 import com.example.server.service.IUserService;
 import com.example.server.service.InstituteTableService;
 import com.example.server.utils.TokenUtils;
@@ -28,13 +29,12 @@ public class InstituteController {
 
     @GetMapping("/list") // 列出该机构用户所属机构下的所有机构
     public Result listInstitute(){
-        try{
-            List<InstituteTable> institutesVo = instituteTableService.listInstitute();
-            return Result.success(institutesVo);
-        }catch (Exception e){
-            e.printStackTrace();
-            return Result.fail();
-        }
+        User user = TokenUtils.getCurrentUser();
+        // 普通用户返回无权限
+        if(user == null || user.getType() == 0)
+            throw PoiException.NoRoot();
+        List<InstituteTable> institutesVo = instituteTableService.listInstitute();
+        return Result.success(institutesVo);
     }
     @GetMapping("/listUser/{id}") // 列出该机构用户所属机构下的所有用户,if_institute为true表示机构用户，否则业主
     public Result listInstituteUser(@PathVariable int id, boolean if_institute){

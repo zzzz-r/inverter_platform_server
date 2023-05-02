@@ -22,4 +22,11 @@
         WHERE dtu_table.plant_id = #{plantId}
         GROUP BY dtu_table.id
     </select>
+    <select id="listAlarmByInstitute" resultType="com.example.server.entity.DtuTable">
+        SELECT dtu_table.*
+        FROM dtu_table
+                 JOIN plant_owner_table ON plant_owner_table.plant_id = dtu_table.plant_id
+        WHERE plant_owner_table.institute_id = #{instituteId} AND dtu_table.state = 1
+
+    </select>
 </mapper>

@@ -19,7 +19,7 @@ public class DtuTable implements Serializable {
      * 
      */
     @TableId(type = IdType.AUTO)
-    private Object id;
+    private Integer id;
 
     /**
      * 
@@ -34,7 +34,7 @@ public class DtuTable implements Serializable {
     /**
      * 
      */
-    private Object plantId;
+    private Integer plantId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

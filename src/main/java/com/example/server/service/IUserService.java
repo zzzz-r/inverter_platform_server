@@ -7,8 +7,8 @@ import com.example.server.entity.User;
 public interface IUserService extends IService<User> {
 
     UserDTO login(UserDTO userDTO);
-
     User register(UserDTO userDTO);
-
     String getNameById(int id);
+    boolean ifInstituteUser();
+    String getCurUserName();
 }

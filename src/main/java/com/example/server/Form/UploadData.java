@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class UploadData {
-    private Object dtuId;
+    private Integer dtuId;
     private Date updateTime;
     private List<MiData> miDataList;
 }

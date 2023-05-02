@@ -18,7 +18,7 @@ public class MiDayPower implements Serializable {
     /**
      * 
      */
-    private Object id;
+    private Integer id;
 
     /**
      * 

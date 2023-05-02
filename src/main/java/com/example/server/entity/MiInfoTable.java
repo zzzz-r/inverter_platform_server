@@ -18,12 +18,12 @@ public class MiInfoTable implements Serializable {
      * 
      */
     @TableId(type = IdType.AUTO)
-    private Object id;
+    private Integer id;
 
     /**
      * 
      */
-    private Object dtuId;
+    private Integer dtuId;
 
     /**
      * 容量 kWp

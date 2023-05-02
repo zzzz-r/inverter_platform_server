@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class DtuAlarmVo {
-    private Object id;
+    private Integer id;
 
     private Integer state;
 

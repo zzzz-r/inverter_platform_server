@@ -14,5 +14,5 @@ import java.util.List;
 public interface MiInfoTableService extends IService<MiInfoTable> {
     List<MiList> listMiByPlantId(int plantId);
 
-    String getPlantName(Object miId);
+    String getPlantNameByMiId(int miId);
 }

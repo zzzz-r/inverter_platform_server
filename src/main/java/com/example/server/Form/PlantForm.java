@@ -1,14 +1,11 @@
-package com.example.server.entity;
+package com.example.server.Form;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-@TableName("plant_info_table")
-public class PlantBasicInfo {
-    @TableId(type = IdType.AUTO)
+public class PlantForm {
     private Integer id;
     private String name;
     private String province;
@@ -27,4 +24,6 @@ public class PlantBasicInfo {
     private float cost;
     private float daily_repay;
     private String cover;
+    private Integer instituteId;
+    List<Integer> userId;
 }

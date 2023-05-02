@@ -29,13 +29,10 @@ public class InstituteTableServiceImpl extends ServiceImpl<InstituteTableMapper,
 
     public List<InstituteTable> listInstitute(){
         User user = TokenUtils.getCurrentUser();
-        // 普通用户返回无权限
-        if(user == null || user.getType() == 0)
-            throw PoiException.NoRoot();
         // 找到当前用户的机构id
+        assert user != null;
         int id = user.getInstituteId();
-        List<InstituteTable> institutesVo = findAllChildInstitute(id);
-        return institutesVo;
+        return findAllChildInstitute(id);
     }
 
     // 查找对应id的机构下的所有子机构

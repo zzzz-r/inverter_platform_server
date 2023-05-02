@@ -14,13 +14,6 @@ public class PlantBasicInfoServiceImpl extends ServiceImpl<PlantBasicInfoMapper,
     @Resource
     private PlantBasicInfoMapper plantBasicInfoMapper;
     @Override
-    public void saveNewPlant(PlantBasicInfo poi){
-        int row = plantBasicInfoMapper.insert(poi);
-        if( row==0 ){
-            throw PoiException.OperateFail();
-        }
-    }
-    @Override
     public void updatePlant(PlantBasicInfo poi){
         try {
             int row = plantBasicInfoMapper.updateById(poi);

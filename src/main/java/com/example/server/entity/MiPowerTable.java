@@ -19,7 +19,7 @@ public class MiPowerTable implements Serializable {
      * 
      */
     @TableId
-    private Object id;
+    private Integer id;
 
     /**
      * 功率

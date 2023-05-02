@@ -8,6 +8,7 @@ import com.example.server.entity.PlantBasicInfo;
 import com.example.server.exception.PoiException;
 import com.example.server.service.DtuTableService;
 import com.example.server.service.IPlantBasicInfoService;
+import com.example.server.service.InstituteTableService;
 import com.example.server.vo.DtuAlarmVo;
 import com.example.server.vo.DtuList;
 import com.example.server.vo.MiAlarmVo;
@@ -33,6 +34,8 @@ public class DtuController {
     private DtuTableService dtuTableService;
     @Resource
     private IPlantBasicInfoService plantBasicInfoService;
+    @Resource
+    private InstituteTableService instituteTableService;
     @GetMapping("/list/{plantId}")
     public Result list(@PathVariable int plantId){
         List<DtuList> dtuLists = dtuTableService.listDtuByPlantId(plantId);
@@ -42,19 +45,19 @@ public class DtuController {
     @GetMapping("/alarm")
     public Result listAlarmDtu(){
         try{
-            QueryWrapper<DtuTable> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("state", 1);
-            List<DtuTable> dtuTableList = dtuTableService.list(queryWrapper);
-            List<DtuAlarmVo> dtuAlarmVos = dtuTableList.stream().map( item->{
-                DtuAlarmVo dtuAlarmVo = new DtuAlarmVo();
-                BeanUtils.copyProperties(item, dtuAlarmVo);
-                PlantBasicInfo plant = plantBasicInfoService.getById((Serializable) item.getPlantId());
-                if(plant != null){
-                    dtuAlarmVo.setPlantName(plant.getName());
-                }
-                return dtuAlarmVo;
-            }).collect(Collectors.toList());
-            return Result.success(dtuAlarmVos);
+            List<DtuAlarmVo> dtuAlarmVoList = instituteTableService.listInstitute().stream()
+                    .flatMap(institute -> dtuTableService.listAlarmByInstitute(institute.getId()).stream()
+                            .map(item -> {
+                                DtuAlarmVo dtuAlarmVo = new DtuAlarmVo();
+                                BeanUtils.copyProperties(item, dtuAlarmVo);
+                                PlantBasicInfo plant = plantBasicInfoService.getById((Serializable) item.getPlantId());
+                                if(plant != null){
+                                    dtuAlarmVo.setPlantName(plant.getName());
+                                }
+                                return dtuAlarmVo;
+                            }))
+                    .collect(Collectors.toList());
+            return Result.success(dtuAlarmVoList);
         }catch (Exception e){
             e.printStackTrace();
             throw PoiException.OperateFail();

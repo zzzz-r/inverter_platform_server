@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class MiAlarmVo {
-    private Object id;
+    private Integer id;
     private Integer state;
     private String plantName;
     private Integer ifAlarm;

@@ -6,9 +6,9 @@ import java.util.Date;
 
 @Data
 public class MiList {
-    private Object id;
+    private Integer id;
     private Integer state;
-    private Object dtuId;
+    private Integer dtuId;
     private Double power;
     private Double capacity;
     private String updateTime;

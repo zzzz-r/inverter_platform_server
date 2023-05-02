@@ -3,6 +3,8 @@ package com.example.server.mapper;
 import com.example.server.entity.MiAlarmTable;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
 * @author 86130
 * @description 针对表【mi_alarm_table】的数据库操作Mapper
@@ -10,7 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.example.server.entity.MiAlarmTable
 */
 public interface MiAlarmTableMapper extends BaseMapper<MiAlarmTable> {
-
+    List<MiAlarmTable> listAlarmByInstitute(Integer instituteId);
 }
 
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.PlantOwnerTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.server.entity.PlantOwnerTable">
+            <id property="plantId" column="plant_id" jdbcType="OTHER"/>
+            <id property="userId" column="user_id" jdbcType="OTHER"/>
+            <id property="instituteId" column="institute_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        plant_id,user_id,institute_id
+    </sql>
+</mapper>

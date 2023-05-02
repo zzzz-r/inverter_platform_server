@@ -15,6 +15,8 @@ import java.util.List;
 */
 public interface DtuTableMapper extends BaseMapper<DtuTable> {
     List<DtuList> listDtuByPlantId(@Param("plantId") int plantId);
+
+    List<DtuTable> listAlarmByInstitute(Integer id);
 }
 
 

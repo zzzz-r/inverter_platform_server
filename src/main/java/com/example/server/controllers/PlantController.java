@@ -3,12 +3,12 @@ package com.example.server.controllers;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.server.Form.PlantForm;
 import com.example.server.entity.*;
 import com.example.server.exception.PoiException;
 import com.example.server.service.*;
 import com.example.server.service.impl.UserServiceImpl;
+import com.example.server.utils.TokenUtils;
 import com.example.server.vo.PlantList;
 import com.example.server.vo.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -40,45 +38,67 @@ public class PlantController {
     private InstituteTableService instituteTableService;
     @Resource
     private UserServiceImpl userService;
-    @GetMapping("/list") //分页待修改
+    @GetMapping("/list")
     public Result list(){
         // 列出当前用户下所有机构
-        List<InstituteTable> institutesVo = instituteTableService.listInstitute();
-        log.info("{}",institutesVo);
-        List<PlantList> plantLists = institutesVo.stream().map( institute ->{
-            PlantList plantVo = new PlantList();
-            // 查找机构下对应的用户和电站
-            try{
-                QueryWrapper<PlantOwnerTable> queryOwner = new QueryWrapper<>();
-                queryOwner.eq("institute_id", institute.getId());
-                PlantOwnerTable ownerInfo = plantOwnerTableService.getOne(queryOwner);
-                log.info("{}",ownerInfo);
-                if(ownerInfo != null) {
-                    // 给返回数据赋值
-                    plantVo.setInstitute(instituteTableService.getNameById(ownerInfo.getInstituteId()));
-                    plantVo.setOwner(userService.getNameById((Integer) ownerInfo.getUserId()));
-                    PlantPower plantPower = plantPowerService.getById((Serializable) ownerInfo.getPlantId());
-                    PlantBasicInfo plantBasicInfo = plantBasicInfoService.getById((Serializable) ownerInfo.getPlantId());
-                    BeanUtils.copyProperties(plantPower,plantVo);
-                    BeanUtils.copyProperties(plantBasicInfo,plantVo);
-                }
-                log.info("{}",plantVo);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return plantVo;
-        }).collect(Collectors.toList());
+        List<InstituteTable> institutes = instituteTableService.listInstitute();
+
+        List<PlantList> plantLists = institutes.stream()
+                .flatMap(institute -> { // 使用 flatMap() 方法将所有的 PlantOwnerTable 记录转换为 PlantList 对象。
+                    // 对每个机构，找到全部电站所有者业主
+                    List<PlantOwnerTable> plantOwners = plantOwnerTableService.getByInstituteId(institute.getId());
+                    //使用 Map 来将 PlantOwnerTable 记录按照 plantId 分组，并将每个 userId 对应的用户名添加到同一个列表中。
+                    Map<Integer, List<String>> plantOwnerMap = new HashMap<>();
+                    for (PlantOwnerTable plantOwner : plantOwners) {
+                        plantOwnerMap.computeIfAbsent(plantOwner.getPlantId(), k -> new ArrayList<>())
+                                .add(userService.getNameById(plantOwner.getUserId()));
+                    }
+                    // 对于每个 PlantList 对象，使用 Map.Entry 来获取它的 id 和 Owner 字段，而 Institute 字段则来自于外层的机构对象
+                    return plantOwnerMap.entrySet().stream()
+                            .map(entry -> {
+                                PlantList plantList = new PlantList();
+                                int plantId = entry.getKey();
+                                plantList.setId(plantId);
+                                plantList.setInstitute(institute.getName());
+                                plantList.setOwner(entry.getValue());
+                                PlantPower plantPower = plantPowerService.getById(plantId);
+                                PlantBasicInfo plantBasicInfo = plantBasicInfoService.getById(plantId);
+                                BeanUtils.copyProperties(plantPower,plantList);
+                                BeanUtils.copyProperties(plantBasicInfo,plantList);
+                                return plantList;
+                            })
+                            // 在这里使用 filter 方法对电站列表进行过滤，若当前用户为业主，只返回包含当前用户名的电站列表。
+                            .filter(plantList -> userService.ifInstituteUser() || plantList.getOwner().contains(userService.getCurUserName()));
+                })
+                .collect(Collectors.toList());
         return Result.success(plantLists);
     }
 
-    @GetMapping("/detail/info/{id}") // 获得电站基本信息
-    // 通过访问路径获得参数
+    @GetMapping("/detail/info/{id}") // 获得电站基本信息,包括业主信息（编辑电站）
     public Result detailInfo(@PathVariable int id){
-        PlantBasicInfo poi = plantBasicInfoService.getById(id);
-        if(poi == null){
-            throw PoiException.NotFound(); //查找失败抛出异常
+        // 得到基本信息
+        PlantBasicInfo plantBasicInfo = plantBasicInfoService.getById(id);
+        PlantForm plantForm = new PlantForm();
+        BeanUtils.copyProperties(plantBasicInfo,plantForm);
+        // 得到业主信息
+        List<PlantOwnerTable> plantOwnerTableList = plantOwnerTableService.getByPlantId(id);
+
+        List<Integer> userIdList = new ArrayList<>();
+        Integer instituteId = null;
+
+        for (PlantOwnerTable plantOwnerTable : plantOwnerTableList) {
+            if (plantOwnerTable.getUserId() != null) {
+                userIdList.add(plantOwnerTable.getUserId());
+            }
+            if (plantOwnerTable.getInstituteId() != null) {
+                instituteId = plantOwnerTable.getInstituteId();
+            }
         }
-        return Result.success(poi);
+
+        plantForm.setUserId(userIdList);
+        plantForm.setInstituteId(instituteId);
+
+        return Result.success(plantForm);
     }
 
     @GetMapping("/detail/plantList/{id}") // 获得电站List信息
@@ -104,11 +124,30 @@ public class PlantController {
         return Result.success(plantPowerHistoryList);
     }
 
-    @PostMapping("/add") // 添加电站
-    // body请求中raw json参数
-    public Result add(@RequestBody PlantBasicInfo poiForm){ //@RequestBody获取前端的json数据给poiForm对象
-        plantBasicInfoService.saveNewPlant(poiForm);
-        return detailInfo(poiForm.getId());
+    @PostMapping("/addOrEdit") // 添加或编辑电站
+    public Result addOrEdit(@RequestBody PlantForm plantForm){ //@RequestBody获取前端的json数据给poiForm对象
+        try{
+            // 添加或修改基本信息
+            PlantBasicInfo plantBasicInfo = new PlantBasicInfo();
+            BeanUtils.copyProperties(plantForm,plantBasicInfo);
+            plantBasicInfoService.saveOrUpdate(plantBasicInfo);
+            // 添加或修改业主信息
+            int instituteId = plantForm.getInstituteId();
+            int plantId = plantBasicInfo.getId();
+            // 首先删除业主原有信息
+            plantOwnerTableService.deleteByPlantId(plantId);
+            for(Integer userId: plantForm.getUserId()){
+                PlantOwnerTable plantOwnerTable = new PlantOwnerTable();
+                plantOwnerTable.setPlantId(plantId);
+                plantOwnerTable.setUserId(userId);
+                plantOwnerTable.setInstituteId(instituteId);
+                plantOwnerTableService.save(plantOwnerTable);
+            }
+            return Result.success(plantId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.fail();
+        }
     }
 
     @PutMapping ("/edit/{id}") // 编辑电站

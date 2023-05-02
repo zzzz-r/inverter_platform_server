@@ -30,6 +30,9 @@ public class DtuTableServiceImpl extends ServiceImpl<DtuTableMapper, DtuTable>
             throw PoiException.OperateFail();
         }
     }
+    public List<DtuTable> listAlarmByInstitute(Integer id){
+        return dtuTableMapper.listAlarmByInstitute(id);
+    }
 }
 
 
