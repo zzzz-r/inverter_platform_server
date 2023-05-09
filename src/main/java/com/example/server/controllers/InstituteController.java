@@ -3,7 +3,6 @@ package com.example.server.controllers;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.server.entity.InstituteTable;
 import com.example.server.entity.User;
-import com.example.server.enums.ResultEnum;
 import com.example.server.exception.PoiException;
 import com.example.server.service.IUserService;
 import com.example.server.service.InstituteTableService;

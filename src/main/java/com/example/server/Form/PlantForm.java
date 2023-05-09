@@ -2,6 +2,7 @@ package com.example.server.Form;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -12,17 +13,17 @@ public class PlantForm {
     private String city;
     private String county;
     private String address;
-    private float lat;
-    private float lng;
-    private String buildDate;
+    private Double lat;
+    private Double lng;
+    private Date buildDate;
     private String plantType;
     private String sysType;
-    private float capacity;
-    private float selfUseRate;
-    private float elecBenefit;
-    private float subsidyBenefit;
-    private float cost;
-    private float daily_repay;
+    private Double capacity;
+    private Double selfUseRate;
+    private Double elecBenefit;
+    private Double subsidyBenefit;
+    private Double cost;
+    private Double dailyRepay;
     private String cover;
     private Integer instituteId;
     List<Integer> userId;

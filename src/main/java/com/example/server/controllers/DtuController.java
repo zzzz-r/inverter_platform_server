@@ -1,17 +1,12 @@
 package com.example.server.controllers;
 
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.server.entity.DtuTable;
-import com.example.server.entity.MiAlarmTable;
-import com.example.server.entity.PlantBasicInfo;
+import com.example.server.entity.PlantInfoTable;
 import com.example.server.exception.PoiException;
 import com.example.server.service.DtuTableService;
-import com.example.server.service.IPlantBasicInfoService;
 import com.example.server.service.InstituteTableService;
+import com.example.server.service.PlantInfoTableService;
 import com.example.server.vo.DtuAlarmVo;
 import com.example.server.vo.DtuList;
-import com.example.server.vo.MiAlarmVo;
 import com.example.server.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -22,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +27,7 @@ public class DtuController {
     @Resource
     private DtuTableService dtuTableService;
     @Resource
-    private IPlantBasicInfoService plantBasicInfoService;
+    private PlantInfoTableService plantBasicInfoService;
     @Resource
     private InstituteTableService instituteTableService;
     @GetMapping("/list/{plantId}")
@@ -50,7 +44,7 @@ public class DtuController {
                             .map(item -> {
                                 DtuAlarmVo dtuAlarmVo = new DtuAlarmVo();
                                 BeanUtils.copyProperties(item, dtuAlarmVo);
-                                PlantBasicInfo plant = plantBasicInfoService.getById((Serializable) item.getPlantId());
+                                PlantInfoTable plant = plantBasicInfoService.getById(item.getPlantId());
                                 if(plant != null){
                                     dtuAlarmVo.setPlantName(plant.getName());
                                 }

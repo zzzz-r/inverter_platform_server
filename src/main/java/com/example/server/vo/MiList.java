@@ -11,7 +11,7 @@ public class MiList {
     private Integer dtuId;
     private Double power;
     private Double capacity;
-    private String updateTime;
+    private Date updateTime;
     private Double dayGen;
     private Double dcCurrent;
     private Double dcVoltage;

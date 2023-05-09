@@ -3,18 +3,15 @@ package com.example.server.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.server.entity.InstituteTable;
 import com.example.server.entity.User;
-import com.example.server.enums.ResultEnum;
-import com.example.server.exception.PoiException;
-import com.example.server.mapper.PlantPowerMapper;
 import com.example.server.service.InstituteTableService;
 import com.example.server.mapper.InstituteTableMapper;
 import com.example.server.utils.TokenUtils;
-import com.example.server.vo.Result;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
 * @author 86130
@@ -52,7 +49,7 @@ public class InstituteTableServiceImpl extends ServiceImpl<InstituteTableMapper,
     // 递归查找institute下所有的子机构
     public void findChildInstitute(InstituteTable institute, List<InstituteTable> institutes, List<InstituteTable> institutesVo){
         for(InstituteTable child : institutes){
-            if(child.getPid() == institute.getId()){
+            if(Objects.equals(child.getPid(), institute.getId())){
                 institutesVo.add(child);
                 findChildInstitute(child, institutes, institutesVo);
             }

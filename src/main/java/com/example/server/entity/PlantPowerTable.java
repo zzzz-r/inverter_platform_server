@@ -9,51 +9,36 @@ import lombok.Data;
 
 /**
  * 
- * @TableName institute_table
+ * @TableName plant_power_table
  */
-@TableName(value ="institute_table")
+@TableName(value ="plant_power_table")
 @Data
-public class InstituteTable implements Serializable {
+public class PlantPowerTable implements Serializable {
     /**
-     * 机构id
+     * 
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 上级机构id
+     * 0123分别表示正常、接入中、设备离线
      */
-    private Integer pid;
+    private Integer state;
 
     /**
-     * 机构名称
+     * 0表示正常，1表示报警
      */
-    private String name;
+    private Boolean alarm;
 
     /**
-     * 机构类型
+     * 
      */
-    private String type;
+    private Double power;
 
     /**
-     * 联系人
+     * 
      */
-    private String contactName;
-
-    /**
-     * 联系电话
-     */
-    private String contactTel;
-
-    /**
-     * 地址
-     */
-    private String address;
-
-    /**
-     * 描述
-     */
-    private String description;
+    private Double dayGen;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -15,4 +15,7 @@
         id,day_gen,capacity,
         day_time
     </sql>
+    <select id="selectByPlantId" resultType="com.example.server.entity.PlantPowerHistory">
+        select * from plant_power_history where id = #{plantId}
+    </select>
 </mapper>

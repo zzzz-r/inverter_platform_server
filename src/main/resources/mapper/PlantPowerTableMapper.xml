@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.PlantPowerTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.server.entity.PlantPowerTable">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="state" column="state" jdbcType="SMALLINT"/>
+            <result property="alarm" column="alarm" jdbcType="TINYINT"/>
+            <result property="power" column="power" jdbcType="FLOAT"/>
+            <result property="dayGen" column="day_gen" jdbcType="FLOAT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,state,alarm,
+        power,day_gen
+    </sql>
+</mapper>

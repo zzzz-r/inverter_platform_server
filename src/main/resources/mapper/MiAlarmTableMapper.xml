@@ -24,7 +24,7 @@
         update_time
     </sql>
     <select id="listAlarmByInstitute" resultType="com.example.server.entity.MiAlarmTable">
-        SELECT mi_alarm_table.*
+        SELECT DISTINCT mi_alarm_table.*
         FROM mi_alarm_table
                  JOIN mi_info_table ON mi_info_table.id = mi_alarm_table.id
                  JOIN dtu_table ON mi_info_table.dtu_id = dtu_table.id
