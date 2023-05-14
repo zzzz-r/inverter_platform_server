@@ -1,10 +1,14 @@
 package com.example.server.service.impl;
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.server.common.Constants;
 import com.example.server.entity.InstituteTable;
 import com.example.server.entity.User;
 import com.example.server.service.InstituteTableService;
 import com.example.server.mapper.InstituteTableMapper;
+import com.example.server.utils.RedisUtils;
 import com.example.server.utils.TokenUtils;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +33,19 @@ public class InstituteTableServiceImpl extends ServiceImpl<InstituteTableMapper,
         // 找到当前用户的机构id
         assert user != null;
         int id = user.getInstituteId();
-        return findAllChildInstitute(id);
+
+        List<InstituteTable> childInstitutes;
+//        // 查找是否有对应缓存
+//         String cache = RedisUtils.getRedisCache(Constants.INSTITUTES);
+//        if(cache == null){
+//            childInstitutes = findAllChildInstitute(id);
+//            RedisUtils.setRedisCache(Constants.INSTITUTES,childInstitutes); // 设置缓存
+//        } else{
+//            childInstitutes = JSONUtil.toBean(cache, new TypeReference<List<InstituteTable>>() {
+//            }, true); // 取缓存并转换为对象
+//        }
+        childInstitutes = findAllChildInstitute(id);
+        return childInstitutes;
     }
 
     // 查找对应id的机构下的所有子机构

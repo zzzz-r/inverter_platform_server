@@ -8,6 +8,30 @@ spring:
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+  cache:
+    redis:
+      time-to-live: 5 # 缓存过期时间，单位为秒
+
+  mail:
+    #    protocol: smtps
+    protocol: smtps
+    # 配置 SMTP 服务器地址
+    host: smtp.163.com
+    # 发送者邮箱
+    #    username: xqnode@163.com
+    username: micro_inverter@163.com
+    # 配置密码，注意不是真正的密码，而是刚刚申请到的授权码
+    password: VPSBOJXXKNVJKMAH
+    # 端口号465或587
+    port: 465
+    # 默认的邮件编码为UTF-8
+    default-encoding: UTF-8
+
+
 upload:
   localPath: C:\Users\86130\Desktop\毕设\code\cover_pics\
   accessPath: /upload/

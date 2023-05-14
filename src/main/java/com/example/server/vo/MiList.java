@@ -8,6 +8,7 @@ import java.util.Date;
 public class MiList {
     private Integer id;
     private Integer state;
+    private Integer ifAlarm;
     private Integer dtuId;
     private Double power;
     private Double capacity;

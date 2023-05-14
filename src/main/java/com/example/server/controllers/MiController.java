@@ -9,10 +9,7 @@ import com.example.server.vo.MiList;
 import com.example.server.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -48,13 +45,15 @@ public class MiController {
         MiList miList = new MiList();
         MiInfoTable miInfoTable= miInfoTableService.getById(miId);
         MiPowerTable miPowerTable= miPowerTableService.getById(miId);
+        MiAlarmTable miAlarmTable= miAlarmTableService.getById(miId);
         BeanUtils.copyProperties(miInfoTable,miList);
         BeanUtils.copyProperties(miPowerTable,miList);
+        BeanUtils.copyProperties(miAlarmTable,miList);
         return Result.success(miList);
     }
 
     @GetMapping("/dayInfo/{miId}")
-    public Result getDayPowerInfo(@PathVariable int miId){
+    public Result getDayPowerInfo(@PathVariable int miId){ // 获得微逆24小时数据
         try{
             QueryWrapper<MiDayPower> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", miId)
@@ -63,9 +62,9 @@ public class MiController {
             List<MiDayPower> miLists = miDayPowerService.list(queryWrapper);
             return Result.success(miLists);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            throw PoiException.OperateFail();
         }
-        return Result.success();
     }
 
     @GetMapping("/detail/power/{miId}")
@@ -94,8 +93,28 @@ public class MiController {
                     .collect(Collectors.toList());
             return Result.success(miAlarmVoList);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
             throw PoiException.OperateFail();
         }
+    }
+
+    @PostMapping("/add") // 添加
+    public Result add(@RequestBody MiInfoTable miInfoTable){
+        try{
+            miInfoTableService.saveOrUpdate(miInfoTable);
+        }catch (Exception e){
+            throw PoiException.OperateFail();
+        }
+        return Result.success();
+    }
+
+    @DeleteMapping("/delete/{id}") //删除
+    public Result delete(@PathVariable int id){
+        try{
+            miInfoTableService.removeById(id);
+        }catch (Exception e){
+            throw PoiException.OperateFail();
+        }
+        return Result.success();
     }
 }

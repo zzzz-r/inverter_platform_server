@@ -1,11 +1,15 @@
 package com.example.server.controllers;
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.server.common.Constants;
 import com.example.server.entity.InstituteTable;
 import com.example.server.entity.User;
 import com.example.server.exception.PoiException;
 import com.example.server.service.IUserService;
 import com.example.server.service.InstituteTableService;
+import com.example.server.utils.RedisUtils;
 import com.example.server.utils.TokenUtils;
 import com.example.server.vo.Result;
 import com.example.server.vo.UserVo;
@@ -36,9 +40,11 @@ public class InstituteController {
         return Result.success(institutesVo);
     }
     @GetMapping("/listUser/{id}") // 列出该机构用户所属机构下的所有用户,if_institute为true表示机构用户，否则业主
-    public Result listInstituteUser(@PathVariable int id, boolean if_institute){
+    public Result listUser(@PathVariable int id, boolean if_institute){ // id为机构id
         try{
-            List<InstituteTable> institutesVo = instituteTableService.findAllChildInstitute(id);
+            //先查找id下属机构
+            List<InstituteTable> institutesVo = instituteTableService.findAllChildInstitute(id);;
+
             List<UserVo> userVos = new ArrayList<>();
             for(InstituteTable instituteTable: institutesVo){
                 QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -60,7 +66,7 @@ public class InstituteController {
             }
             return Result.success(userVos);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
             return Result.fail();
         }
     }
@@ -68,8 +74,10 @@ public class InstituteController {
     @PostMapping("/save") // 保存或更新
     public Result saveInstitute(@RequestBody InstituteTable instituteTable){
         boolean flag = instituteTableService.saveOrUpdate(instituteTable);
-        if(flag)
+        if(flag) {
+//            RedisUtils.flushRedisCache(Constants.INSTITUTES);
             return Result.success();
+        }
         else
             return Result.fail();
     }
@@ -77,8 +85,10 @@ public class InstituteController {
     @DeleteMapping("/delete/{id}") //删除
     public Result deleteInstitute(@PathVariable int id){
         boolean flag = instituteTableService.removeById(id);
-        if(flag)
+        if(flag) {
+//            RedisUtils.flushRedisCache(Constants.INSTITUTES);
             return Result.success();
+        }
         else
             return Result.fail();
     }

@@ -14,4 +14,5 @@ public interface PlantOwnerTableService extends IService<PlantOwnerTable> {
     List<PlantOwnerTable> getByPlantId(int plantId);
     List<PlantOwnerTable> getByInstituteId(int instituteId);
     void deleteByPlantId(int plantId);
+    int getBelongedInstituteId(Integer plantId);
 }

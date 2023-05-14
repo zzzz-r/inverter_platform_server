@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.PlantInfoTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.server.entity.PlantInfoTable">
+            <id property="id" column="id" jdbcType="OTHER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="province" column="province" jdbcType="VARCHAR"/>
+            <result property="city" column="city" jdbcType="VARCHAR"/>
+            <result property="county" column="county" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="lat" column="lat" jdbcType="FLOAT"/>
+            <result property="lng" column="lng" jdbcType="FLOAT"/>
+            <result property="buildDate" column="build_date" jdbcType="TIMESTAMP"/>
+            <result property="plantType" column="plant_type" jdbcType="VARCHAR"/>
+            <result property="sysType" column="sys_type" jdbcType="VARCHAR"/>
+            <result property="capacity" column="capacity" jdbcType="FLOAT"/>
+            <result property="selfUseRate" column="self_use_rate" jdbcType="FLOAT"/>
+            <result property="elecBenefit" column="elec_benefit" jdbcType="FLOAT"/>
+            <result property="subsidyBenefit" column="subsidy_benefit" jdbcType="FLOAT"/>
+            <result property="cost" column="cost" jdbcType="FLOAT"/>
+            <result property="dailyRepay" column="daily_repay" jdbcType="FLOAT"/>
+            <result property="cover" column="cover" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,province,
+        city,county,address,
+        lat,lng,build_date,
+        plant_type,sys_type,capacity,
+        self_use_rate,elec_benefit,subsidy_benefit,
+        cost,daily_repay,cover
+    </sql>
+    <select id="countConnectedMi" resultType="java.lang.Integer">
+        select count(*) from mi_info_table
+            join dtu_table on mi_info_table.dtu_id = dtu_table.id
+        where dtu_table.plant_id = #{plantId}
+    </select>
+    <select id="countConnectedDtu" resultType="java.lang.Integer">
+        select count(*) from dtu_table
+        where dtu_table.plant_id = #{plantId}
+    </select>
+</mapper>

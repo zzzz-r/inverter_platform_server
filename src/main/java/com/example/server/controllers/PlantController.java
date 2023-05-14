@@ -1,13 +1,17 @@
 package com.example.server.controllers;
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.server.Form.PlantForm;
+import com.example.server.common.Constants;
 import com.example.server.entity.*;
 import com.example.server.exception.PoiException;
 import com.example.server.service.*;
 import com.example.server.service.impl.UserServiceImpl;
+import com.example.server.utils.RedisUtils;
 import com.example.server.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -42,6 +46,13 @@ public class PlantController {
     private UserServiceImpl userService;
     @GetMapping("/list")
     public Result list(){
+//        // 先查找缓存
+//        String cache = RedisUtils.getRedisCache(Constants.PLANTS);
+//        if(cache != null) {
+//            List<PlantList> plantLists = JSONUtil.toBean(cache, new TypeReference<List<PlantList>>() {}, true);
+//            return Result.success(plantLists);
+//        }
+
         // 列出当前用户下所有机构
         List<InstituteTable> institutes = instituteTableService.listInstitute();
 
@@ -73,6 +84,7 @@ public class PlantController {
                             .filter(plantList -> userService.ifInstituteUser() || plantList.getOwner().contains(userService.getCurUserName()));
                 })
                 .collect(Collectors.toList());
+//        RedisUtils.setRedisCache(Constants.PLANTS,plantLists);
         return Result.success(plantLists);
     }
 
@@ -145,9 +157,10 @@ public class PlantController {
                 plantOwnerTable.setInstituteId(instituteId);
                 plantOwnerTableService.save(plantOwnerTable);
             }
+//            RedisUtils.flushRedisCache(Constants.PLANTS);
             return Result.success(plantId);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
             return Result.fail();
         }
     }
@@ -155,16 +168,18 @@ public class PlantController {
     @PutMapping ("/edit/{id}") // 编辑电站
     public Result edit(@RequestBody PlantInfoTable poiForm, @PathVariable int id){
         plantInfoTableService.updatePlant(poiForm);
+//        RedisUtils.flushRedisCache(Constants.PLANTS);
         return Result.success();
     }
 
     @DeleteMapping("/delete/{id}") //删除电站
     public Result delete(@PathVariable int id){
         plantPowerTableService.deletePlant(id);
+//        RedisUtils.flushRedisCache(Constants.PLANTS);
         return Result.success();
     }
 
-    @GetMapping("/export")
+    @GetMapping("/export") // 导出电站列表
     public void export(HttpServletResponse response) throws Exception {
         try{
             // 从数据库查询出所有的数据
@@ -188,7 +203,7 @@ public class PlantController {
             out.close();
             writer.close();
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
@@ -264,7 +279,7 @@ public class PlantController {
             countVo.setBuildNum(buildNum);
             return Result.success(countVo);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
             throw PoiException.OperateFail();
         }
     }
@@ -301,7 +316,7 @@ public class PlantController {
 
             return Result.success(genReports);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw PoiException.OperateFail();
         }
     }

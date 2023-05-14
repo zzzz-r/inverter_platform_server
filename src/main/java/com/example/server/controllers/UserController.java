@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.server.Form.UserDTO;
 import com.example.server.entity.User;
 import com.example.server.exception.PoiException;
+import com.example.server.mapper.InstituteTableMapper;
 import com.example.server.service.IUserService;
 import com.example.server.utils.TokenUtils;
 import com.example.server.vo.Result;
@@ -13,6 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 import static com.example.server.enums.ResultEnum.ERROR_PARAM;
@@ -21,8 +24,10 @@ import static com.example.server.enums.ResultEnum.ERROR_PARAM;
 @Slf4j
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
+    @Resource
     private IUserService userService;
+    @Resource
+    private InstituteTableMapper instituteTableMapper;
     @PostMapping("/login")
     public Result login(@RequestBody UserDTO userDTO) {
         String userName = userDTO.getUserName();
@@ -67,6 +72,8 @@ public class UserController {
         UserDTO userDTO = new UserDTO();
         user = userService.getById(user.getId());
         BeanUtils.copyProperties(user, userDTO);
+        String instituteName = instituteTableMapper.getNameById(user.getInstituteId());
+        userDTO.setInstitute(instituteName);
         String token = TokenUtils.genToken(user.getId().toString(),user.getPassword()); // 设置token
         userDTO.setToken(token);
         return Result.success(userDTO);
@@ -91,30 +98,33 @@ public class UserController {
 
     @PutMapping("/admin/edit")
     public Result adminEdit(@RequestBody User user) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_name", user.getUserName());
-        List<User> userList = userService.list(queryWrapper);
-        if(userList.size() >=1 && userList.get(0).getId() != user.getId()){ //用户已存在
-            throw PoiException.ErrorRegister();
+        try{
+            userService.updateById(user);
+        }catch (Exception e){
+            throw PoiException.OperateFail();
         }
-        userService.updateById(user);
         return Result.success();
     }
 
     @PostMapping("/admin/register")
     public Result adminRegister(@RequestBody User user) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_name", user.getUserName());
-        User one = userService.getOne(queryWrapper);
-        if(one != null){ //用户已存在
-            throw PoiException.ErrorRegister();
-        }
-        boolean flag = userService.save(user);
-        log.info("{}",user);
-        if (flag){
-            return Result.success();
-        }else{
-            return Result.fail();
+        try{
+            log.info("{}",user);
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_name", user.getUserName());
+            User one = userService.getOne(queryWrapper);
+            if(one != null){ //用户已存在
+                throw PoiException.ErrorRegister();
+            }
+            boolean flag = userService.save(user);
+            if (flag){
+                return Result.success();
+            }else{
+                return Result.fail();
+            }
+        }catch (Exception e){
+//            e.printStackTrace();
+            throw PoiException.OperateFail();
         }
     }
 }

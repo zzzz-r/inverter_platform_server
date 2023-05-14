@@ -32,6 +32,14 @@ public class PlantOwnerTableServiceImpl extends ServiceImpl<PlantOwnerTableMappe
     public List<PlantOwnerTable> getByInstituteId(int instituteId){
         return plantOwnerTableMapper.selectList(new QueryWrapper<PlantOwnerTable>().eq("institute_id", instituteId));
     }
+    @Override
+    public int getBelongedInstituteId(Integer plantId){
+        PlantOwnerTable one = plantOwnerTableMapper.selectOne(new QueryWrapper<PlantOwnerTable>()
+                .eq("plant_id", plantId)
+                .last("limit 1") // 限制只查一条记录
+        );
+        return one.getInstituteId();
+    }
 }
 
 

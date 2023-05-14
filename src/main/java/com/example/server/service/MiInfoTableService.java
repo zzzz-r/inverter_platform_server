@@ -15,4 +15,6 @@ public interface MiInfoTableService extends IService<MiInfoTable> {
     List<MiList> listMiByPlantId(int plantId);
 
     String getPlantNameByMiId(int miId);
+
+    Integer getPlantIdByMiId(int miId);
 }

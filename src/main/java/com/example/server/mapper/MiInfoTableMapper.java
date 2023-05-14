@@ -17,6 +17,8 @@ public interface MiInfoTableMapper extends BaseMapper<MiInfoTable> {
     List<MiList> listMiByPlantId(@Param("plantId") int plantId);
 
     String getPlantNameByMiId(int miId);
+
+    Integer getPlantIdByMiId(int miId);
 }
 
 

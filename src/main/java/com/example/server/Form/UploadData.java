@@ -8,6 +8,5 @@ import java.util.List;
 @Data
 public class UploadData {
     private Integer dtuId;
-    private Date updateTime;
     private List<MiData> miDataList;
 }

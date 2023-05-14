@@ -20,13 +20,9 @@ public class PlantInfoTableServiceImpl extends ServiceImpl<PlantInfoTableMapper,
     @Resource
     private PlantInfoTableMapper plantInfoTableMapper;
     public void updatePlant(PlantInfoTable poi){
-        try {
-            int row = plantInfoTableMapper.updateById(poi);
-            if( row==0 ){
-                throw PoiException.OperateFail();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        int row = plantInfoTableMapper.updateById(poi);
+        if( row==0 ){
+            throw PoiException.OperateFail();
         }
     }
     public int countConnectedMi(Integer plantId){
@@ -36,6 +32,7 @@ public class PlantInfoTableServiceImpl extends ServiceImpl<PlantInfoTableMapper,
     public int countConnectedDtu(Integer plantId){
         return plantInfoTableMapper.countConnectedDtu(plantId);
     }
+
 }
 
 

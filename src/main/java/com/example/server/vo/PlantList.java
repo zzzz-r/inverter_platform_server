@@ -18,5 +18,6 @@ public class PlantList {
     private Double capacity;
     private Date buildDate;
     private String cover;
-
+    private Double lat;
+    private Double lng;
 }

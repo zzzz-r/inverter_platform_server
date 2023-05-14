@@ -35,7 +35,16 @@ public class MiInfoTableServiceImpl extends ServiceImpl<MiInfoTableMapper, MiInf
         try{
             return miInfoTableMapper.getPlantNameByMiId(miId);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            throw PoiException.OperateFail();
+        }
+    }
+
+    public Integer getPlantIdByMiId(int miId){
+        try{
+            return miInfoTableMapper.getPlantIdByMiId(miId);
+        }catch (Exception e){
+//            e.printStackTrace();
             throw PoiException.OperateFail();
         }
     }

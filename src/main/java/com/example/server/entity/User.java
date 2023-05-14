@@ -18,6 +18,7 @@ public class User {
     private String phone;
     private Integer type;
     private Integer instituteId;
+    private Integer alarmMessage;
     private Date createTime;
     private String avatar;
 
